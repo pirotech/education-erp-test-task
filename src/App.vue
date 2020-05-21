@@ -1,32 +1,58 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/login">Login</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
+// zero styles
 #app {
+  width: 100%;
+  min-height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+}
+html,
+body,
+div,
+header,
+main,
+ul,
+li,
+ol,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+input,
+textarea {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  outline: none;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+h2 {
+}
+input, textarea {
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+button {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 8px 12px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
 }
 </style>
