@@ -2,34 +2,33 @@
   <div class="login-page">
     <div class="login-page-card">
       <h2 class="login-page__title">Authorization</h2>
-      <label class="login-page-field">
-        <p class="field__label">Username</p>
-        <input
-          class="field__input"
-          type="text"
-          v-model="username"
-          @input="reset('username')"
-        />
-        <p class="field__error">{{usernameError}}</p>
-      </label>
-      <label class="login-page-field">
-        <p class="field__label">Picture</p>
-        <input
-          class="field__input"
-          type="text"
-          v-model="picture"
-          @input="reset('picture')"
-        />
-        <p class="field__error">{{pictureError}}</p>
-      </label>
+      <UiTextField
+        class="login-page__username"
+        label="Username"
+        :value="username"
+        :error="usernameError"
+        :onChange="e => onFieldChange('username', e.target.value)"
+      />
+      <UiTextField
+        class="login-page__picture"
+        label="Picture"
+        :value="picture"
+        :error="pictureError"
+        :onChange="e => onFieldChange('picture', e.target.value)"
+      />
       <button class="login-page__submit" @click="submit">Submit</button>
     </div>
   </div>
 </template>
 
 <script>
+import UiTextField from '../components/UiTextField';
+
 export default {
   name: 'LoginPage',
+  components: {
+    UiTextField
+  },
   data() {
     return {
       username: '',
@@ -39,8 +38,9 @@ export default {
     };
   },
   methods: {
-    reset(field) {
-      this[field + 'Error'] = '';
+    onFieldChange(name, value) {
+      this[name] = value;
+      this[name + 'Error'] = '';
     },
     submit() {
       this.usernameError = !!this.username ? '' : 'field is required';
@@ -72,26 +72,9 @@ export default {
     width: 100%;
     text-align: center;
   }
-  &-field {
-    display: flex;
-    flex-direction: column;
+  &__username,
+  &__picture {
     margin-top: 8px;
-    .field {
-      &__label {
-        font-size: 14px;
-      }
-      &__input {
-        width: 270px;
-        margin-top: 4px;
-      }
-      &__error {
-        margin-top: 2px;
-        font-size: 12px;
-        color: #d45;
-        min-height: 14px;
-        min-width: 1px;
-      }
-    }
   }
   &__submit {
     margin-top: 8px;
