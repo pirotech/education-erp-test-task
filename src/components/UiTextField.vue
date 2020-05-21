@@ -29,17 +29,18 @@ export default {
   flex-direction: column;
   &__label {
     font-size: 14px;
+    color: #333333;
   }
   &__input {
     width: 270px;
     margin-top: 4px;
   }
   &__error {
+    min-width: 1px;
+    min-height: 14px;
     margin-top: 2px;
     font-size: 12px;
     color: #d45;
-    min-height: 14px;
-    min-width: 1px;
   }
 }
 </style>

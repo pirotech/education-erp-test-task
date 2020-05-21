@@ -69,13 +69,13 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    border: 1px solid #dddddd;
     padding: 30px 60px;
+    border: 1px solid #dddddd;
     border-radius: 2px;
   }
   &__title {
-    margin-bottom: 20px;
     width: 100%;
+    margin-bottom: 20px;
     text-align: center;
   }
   &__username,
@@ -85,6 +85,7 @@ export default {
   &__submit {
     margin-top: 8px;
     align-self: flex-end;
+    color: #333333;
   }
 }
 </style>

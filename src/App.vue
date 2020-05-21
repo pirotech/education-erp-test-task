@@ -40,6 +40,7 @@ textarea {
 }
 
 h2 {
+  color: #333333;
 }
 input, textarea {
   border: 1px solid #dddddd;
