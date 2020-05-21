@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginPage from '../views/LoginPage';
 import MainPage from '../views/MainPage';
+import store from '../store';
 
 Vue.use(VueRouter);
 const routes = [
@@ -29,10 +30,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const authorized = !!localStorage.getItem('authorized');
-  if (to.fullPath !== '/login' && !authorized) {
+  const isAuthorized = store.getters.isAuthorized;
+  if (to.fullPath !== '/login' && !isAuthorized) {
     next('/login');
-  } else if (to.fullPath === '/login' && authorized) {
+  } else if (to.fullPath === '/login' && isAuthorized) {
     next('/');
   } else {
     next();

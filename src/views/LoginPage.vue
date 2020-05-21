@@ -23,6 +23,7 @@
 
 <script>
 import UiTextField from '../components/UiTextField';
+import LOGIN from '../store';
 
 export default {
   name: 'LoginPage',
@@ -46,6 +47,11 @@ export default {
       this.usernameError = !!this.username ? '' : 'field is required';
       this.pictureError = !!this.picture ? '' : 'field is required';
       if (!this.usernameError && !this.pictureError) {
+        this.$store.commit({
+          type: 'LOGIN',
+          username: this.username,
+          picture: this.picture
+        });
         this.$router.push('/');
       }
     }
