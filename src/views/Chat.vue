@@ -2,32 +2,53 @@
   <div class="chat">
     <ul class="chat-contacts">
       <li
-        v-for="contact in contacts"
-        :key="contact.id"
-        class="chat-contacts__item"
-        :class="{'chat-contacts__item_active': activeContact && contact.id === activeContact.id}"
-        @click="setActiveContact(contact)"
-      >{{contact.name}}</li>
+        class="chat-contacts-item"
+        :class="{'chat-contacts-item_active': ownerChatActive}"
+        @click="setActiveChat(owner.chat)"
+      >
+        <i class="chat-contacts-item__picture"></i>
+        <span class="chat-contacts-item__name">Мои сообщения</span>
+      </li>
+      <li
+        v-for="chat in preparedChats"
+        :key="chat.id"
+        class="chat-contacts-item"
+        :class="{'chat-contacts-item_active': activeChat && chat.id === activeChat.id}"
+        @click="setActiveChat(chat)"
+      >
+        <i
+          class="chat-contacts-item__picture"
+          :style="chat.picture ? {
+            background: `no-repeat center center url(${chat.picture})`,
+            backgroundColor: '#eee',
+            backgroundSize: 'cover'
+          } : {}"
+        ></i>
+        <span class="chat-contacts-item__name">
+          {{chat.name}}
+        </span>
+      </li>
     </ul>
     <div class="chat-dialog">
-      <ul class="chat-dialog-messages" v-if="activeContact">
+      <ul class="chat-dialog-messages" v-if="activeChat">
         <li
-          v-for="message in activeContact.messages"
+          v-for="message in activeChat.messages"
           :key="message.id"
           class="chat-dialog-messages__item"
-          :class="['chat-dialog-messages__item' + (message.author === owner.id ? '_right' : '_left')]"
+          :class="['chat-dialog-messages__item' + (message.authorId === owner.id ? '_right' : '_left')]"
         >{{message.text}}</li>
       </ul>
-      <div class="chat-dialog-message-field" v-if="activeContact">
+      <div class="chat-dialog-message-field" v-if="activeChat">
         <input
           class="message-field__input"
           type="text"
           v-model="message"
+          @keyup.enter="sendMessage"
         />
         <button
           class="message-field__button"
           @click="sendMessage"
-        >SEND</button>
+        >Отправить</button>
       </div>
     </div>
   </div>
@@ -35,86 +56,49 @@
 
 <script>
 export default {
-  name: "Chat",
+  name: 'Chat',
+  props: {
+    owner: Object,
+    chats: Array,
+    onSendMessage: Function,
+    onSendYourself: Function
+  },
   data() {
     return {
-      owner: {
-        id: 0
-      },
-      contacts: [
-        {
-          id: 0,
-          name: 'Написать себе',
-          messages: [
-            {
-              id: 0,
-              author: 0,
-              text: 'Hello'
-            },
-            {
-              id: 1,
-              author: 0,
-              text: 'Hello'
-            },
-            {
-              id: 2,
-              author: 0,
-              text: 'How are you?'
-            },
-            {
-              id: 3,
-              author: 0,
-              text: 'Cool'
-            }
-          ]
-        },
-        {
-          id: 1,
-          name: 'Иван Иванов',
-          messages: [
-            {
-              id: 0,
-              author: 0,
-              text: 'Hello'
-            },
-            {
-              id: 1,
-              author: 1,
-              text: 'Hello'
-            },
-            {
-              id: 2,
-              author: 0,
-              text: 'How are you?'
-            },
-            {
-              id: 3,
-              author: 1,
-              text: 'Cool'
-            }
-          ]
-        }
-      ],
-      activeContact: null,
+      activeChat: null,
       message: ''
     };
   },
+  computed: {
+    ownerChatActive() {
+      return this.activeChat && this.owner.chat.id === this.activeChat.id;
+    },
+    preparedChats() {
+      return this.chats && this.chats.map(chat => {
+        // take first NO owner user
+        // his name is chat name
+        const first = chat.members.find(item => item.id !== this.owner.id);
+        return {
+          ...chat,
+          name: first && first.name,
+          picture: first && first.picture
+        };
+      });
+    }
+  },
   methods: {
-    setActiveContact(value) {
-      this.activeContact = value;
+    setActiveChat(value) {
+      this.activeChat = value;
     },
     sendMessage() {
-      this.contacts = this.contacts.map(item => {
-        if (this.activeContact && item.id === this.activeContact.id) {
-          item.messages.push({
-            id: Math.round(Math.random() * 1000),
-            author: this.owner.id,
-            text: this.message
-          });
+      if (this.message) {
+        if (this.ownerChatActive) {
+          this.onSendYourself(this.message, this.owner.id);
+        } else {
+          this.onSendMessage(this.message, this.owner.id, this.activeChat.id);
         }
-        return item;
-      });
-      this.message = '';
+        this.message = '';
+      }
     }
   }
 }
@@ -127,17 +111,29 @@ export default {
   &-contacts {
     width: 40%;
     color: #333333;
-    &__item {
-      padding: 16px 24px;
+    &-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
       cursor: pointer;
-      font-size: 16px;
       transition: background-color .3s;
+      user-select: none;
       &:hover {
-        background-color: #f6f6f6;
+        background-color: #fafafa;
       }
       &_active {
         border-right: 2px solid #cccccc;
         background-color: #fafafa;
+      }
+      &__picture {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: #eee;
+        border-radius: 50%;
+      }
+      &__name {
+        margin-left: 10px;
       }
     }
   }
@@ -194,6 +190,7 @@ export default {
           font-size: 16px;
           letter-spacing: 1.2px;
           color: #fff;
+          text-transform: uppercase;
           border: none;
           border-radius: 0;
           background-color: #a1a1a1;
