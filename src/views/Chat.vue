@@ -1,6 +1,6 @@
 <template>
   <div class="chat">
-    <ul class="chat-contacts">
+    <ul class="chat-contacts" :class="{'chat-contacts_shown': menu}">
       <li
         class="chat-contacts-item"
         :class="{'chat-contacts-item_active': ownerChatActive}"
@@ -29,6 +29,7 @@
         </span>
       </li>
     </ul>
+    <button class="chat-trigger" @click="turnMenus">≡</button>
     <div class="chat-dialog">
       <ul class="chat-dialog-messages" v-if="activeChat">
         <li
@@ -49,6 +50,10 @@
           class="message-field__button"
           @click="sendMessage"
         >Отправить</button>
+        <button
+          class="message-field__button message-field__button_icon"
+          @click="sendMessage"
+        ></button>
       </div>
     </div>
   </div>
@@ -66,7 +71,8 @@ export default {
   data() {
     return {
       activeChat: null,
-      message: ''
+      message: '',
+      menu: false
     };
   },
   computed: {
@@ -99,6 +105,9 @@ export default {
         }
         this.message = '';
       }
+    },
+    turnMenus() {
+      this.menu = !this.menu;
     }
   }
 }
@@ -108,9 +117,24 @@ export default {
 .chat {
   display: flex;
   align-items: stretch;
+  @media (max-width: 576px) {
+    position: relative;
+  }
   &-contacts {
     width: 40%;
     color: #333333;
+    @media (max-width: 576px) {
+      position: absolute;
+      width: 100%;
+      left: -100%;
+      height: 100%;
+      background-color: white;
+      z-index: 100;
+      transition: all .4s ease-in-out;
+    }
+    &_shown {
+      left: 0;
+    }
     &-item {
       display: flex;
       align-items: center;
@@ -118,6 +142,9 @@ export default {
       cursor: pointer;
       transition: background-color .3s;
       user-select: none;
+      @media (max-width: 1200px) {
+        padding: 10px;
+      }
       &:hover {
         background-color: #fafafa;
       }
@@ -131,10 +158,39 @@ export default {
         height: 40px;
         background-color: #eee;
         border-radius: 50%;
+        @media (max-width: 1200px) {
+          width: 30px;
+          height: 30px;
+        }
       }
       &__name {
         margin-left: 10px;
       }
+    }
+  }
+  &-trigger {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    display: none;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin-left: -10px;
+    border: none;
+    background-color: #ccc;
+    z-index: 1000;
+    transition: margin-left .2s;
+    align-self: center;
+    color: white;
+    margin-top: 2px;
+    font-weight: bold;
+    line-height: 20px;
+    font-size: 16px;
+    @media (max-width: 576px) {
+      display: inline-block;
+    }
+    &:hover {
     }
   }
   &-dialog {
@@ -144,6 +200,9 @@ export default {
     justify-content: space-between;
     width: 60%;
     background-color: #f6f6f6;
+    @media (max-width: 576px) {
+      width: 100%;
+    }
     &-messages {
       display: flex;
       flex-direction: column;
@@ -171,6 +230,8 @@ export default {
     }
     &-message-field {
       position: absolute;
+      display: flex;
+      align-items: center;
       bottom: 0;
       width: 100%;
       .message-field {
@@ -181,7 +242,11 @@ export default {
           color: #fff;
           border: none;
           border-radius: 0;
-          background-color: #a1a1a1;
+          background-color: #b3b3b3;
+          @media (max-width: 1200px) {
+            padding: 12px 14px;
+            font-size: 14px;
+          }
         }
         &__button {
           position: absolute;
@@ -195,8 +260,28 @@ export default {
           border-radius: 0;
           background-color: #a1a1a1;
           transition: background-color 0.3s;
+          @media (max-width: 1200px) {
+            padding: 12px 14px;
+            font-size: 14px;
+          }
+          @media (max-width: 576px) {
+            display: none;
+          }
           &:hover {
-            background-color: #878787;
+            background-color: #979797;
+          }
+          &_icon {
+            right: 5px;
+            display: none;
+            height: 35px;
+            width: 35px;
+            padding: 0;
+            border-radius: 50%;
+            @media (max-width: 576px) {
+              display: inline-block;
+              background: no-repeat center center url("../assets/letter.png");
+              background-size: 23px;
+            }
           }
         }
       }

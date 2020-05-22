@@ -34,6 +34,9 @@ export default {
   &__input {
     width: 270px;
     margin-top: 4px;
+    @media (max-width: 576px) {
+      width: 220px;
+    }
   }
   &__error {
     min-width: 1px;

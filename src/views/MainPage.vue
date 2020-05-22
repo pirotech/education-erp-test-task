@@ -105,8 +105,19 @@ export default {
   display: flex;
   width: 100%;
   min-height: 100vh;
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
   &__chat {
     width: 50%;
+    @media (max-width: 992px) {
+      width: 100%;
+      height: 50vh;
+      border-top: 2px solid #eeeeee;
+      &:first-child {
+        border-top: none;
+      }
+    }
   }
 }
 </style>

@@ -65,13 +65,18 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background-color: #fafafa;
   &-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 30px 60px;
-    border: 1px solid #dddddd;
-    border-radius: 2px;
+    margin: 0 50px;
+    border-radius: 4px;
+    background-color: #fff;
+    @media (max-width: 576px) {
+      padding: 20px 40px;
+    }
   }
   &__title {
     width: 100%;
